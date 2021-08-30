@@ -5,13 +5,12 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, l
     tiles.setTileAt(location, assets.tile`myTile`)
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, location) {
-    tiles.setTilemap(tilemap`level1`)
-    scene.cameraShake(4, 500)
-    game.showLongText("Player 1 lost a life", DialogLayout.Bottom)
-    info.player1.changeLifeBy(-1)
     playerCrash()
+    info.player1.changeLifeBy(-1)
+    placeSprites()
 })
 function placeSprites () {
+    tiles.setTilemap(tilemap`level1`)
     Player1 = sprites.create(img`
         . . . . . . . . 
         . 4 4 4 4 4 . . 
@@ -40,7 +39,11 @@ function placeSprites () {
     tiles.placeOnRandomTile(Player2, assets.tile`myTile1`)
 }
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-    Player1Direction = "Up"
+    if (Player1.tileKindAt(TileDirection.Top, assets.tile`myTile2`)) {
+    	
+    } else {
+        Player1Direction = "Up"
+    }
 })
 function playerCrash () {
     Player2Direction = "None"
@@ -54,7 +57,11 @@ controller.player2.onButtonEvent(ControllerButton.Down, ControllerButtonEvent.Pr
     }
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
-    Player1Direction = "Left"
+    if (Player1.tileKindAt(TileDirection.Left, assets.tile`myTile2`)) {
+    	
+    } else {
+        Player1Direction = "Left"
+    }
 })
 controller.player2.onButtonEvent(ControllerButton.Up, ControllerButtonEvent.Pressed, function () {
     if (Player2.tileKindAt(TileDirection.Top, assets.tile`myTile2`)) {
@@ -64,7 +71,11 @@ controller.player2.onButtonEvent(ControllerButton.Up, ControllerButtonEvent.Pres
     }
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
-    Player1Direction = "Right"
+    if (Player1.tileKindAt(TileDirection.Right, assets.tile`myTile2`)) {
+    	
+    } else {
+        Player1Direction = "Right"
+    }
 })
 controller.player2.onButtonEvent(ControllerButton.Right, ControllerButtonEvent.Pressed, function () {
     if (Player2.tileKindAt(TileDirection.Right, assets.tile`myTile2`)) {
@@ -74,7 +85,11 @@ controller.player2.onButtonEvent(ControllerButton.Right, ControllerButtonEvent.P
     }
 })
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
-    Player1Direction = "Down"
+    if (Player1.tileKindAt(TileDirection.Bottom, assets.tile`myTile2`)) {
+    	
+    } else {
+        Player1Direction = "Down"
+    }
 })
 controller.player2.onButtonEvent(ControllerButton.Left, ControllerButtonEvent.Pressed, function () {
     if (Player2.tileKindAt(TileDirection.Left, assets.tile`myTile2`)) {
@@ -91,10 +106,10 @@ scene.onOverlapTile(SpriteKind.Player2, assets.tile`myTile0`, function (sprite, 
     tiles.setTileAt(location, assets.tile`myTile1`)
 })
 scene.onOverlapTile(SpriteKind.Player2, assets.tile`myTile`, function (sprite, location) {
-    tiles.setTilemap(tilemap`level1`)
-    game.showLongText("Player 2 lost a life", DialogLayout.Bottom)
-    info.player2.changeLifeBy(-1)
+    tiles.setTileAt(location, assets.tile`myTile0`)
     playerCrash()
+    info.player2.changeLifeBy(-1)
+    placeSprites()
 })
 let Player2Direction = ""
 let Player1Direction = ""
@@ -129,5 +144,23 @@ game.onUpdateInterval(500, function () {
         Player2.y += 16
     } else {
     	
+    }
+    if (Player1.tileKindAt(TileDirection.Left, assets.tile`myTile2`) && Player1Direction == "Left") {
+        Player1Direction = "Right"
+    } else if (Player1.tileKindAt(TileDirection.Right, assets.tile`myTile2`) && Player1Direction == "Right") {
+        Player1Direction = "Left"
+    } else if (Player1.tileKindAt(TileDirection.Top, assets.tile`myTile2`) && Player1Direction == "Up") {
+        Player1Direction = "Down"
+    } else if (Player1.tileKindAt(TileDirection.Bottom, assets.tile`myTile2`) && Player1Direction == "Down") {
+        Player1Direction = "Up"
+    }
+    if (Player2.tileKindAt(TileDirection.Left, assets.tile`myTile2`) && Player2Direction == "Left") {
+        Player2Direction = "Right"
+    } else if (Player2.tileKindAt(TileDirection.Right, assets.tile`myTile2`) && Player2Direction == "Right") {
+        Player2Direction = "Left"
+    } else if (Player2.tileKindAt(TileDirection.Top, assets.tile`myTile2`) && Player2Direction == "Up") {
+        Player2Direction = "Down"
+    } else if (Player2.tileKindAt(TileDirection.Bottom, assets.tile`myTile2`) && Player2Direction == "Down") {
+        Player2Direction = "Up"
     }
 })
